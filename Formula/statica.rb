@@ -1,8 +1,8 @@
 class Statica < Formula
   desc "Static Analysis meta tool"
   homepage "https://github.com/simpsonjulian/statica"
-  url "https://github.com/simpsonjulian/statica/archive/refs/tags/v0.1.2.tar.gz"
-  sha256 "5c0bf52554c6d99a92711fa1fd89fabaeeb579f13b05747b56cd99f5d01e84db"
+  url "https://github.com/simpsonjulian/statica/archive/refs/tags/v0.1.3.tar.gz"
+  sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   license "MIT"
   depends_on "checkov"
   depends_on "dependency-check"
@@ -19,6 +19,7 @@ class Statica < Formula
   def install
     bin.install "statica"
     libexec.install %w[tools.d html_report.rb 2sarif.rb template.erb]
+    libexec.install "csv2sarif.rb", "csv2sarif"
   end
 
   test do
