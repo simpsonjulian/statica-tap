@@ -18,7 +18,7 @@ class Statica < Formula
 
   def install
     bin.install 'statica'
-    libexec.install %w[tools.d html_report.rb 2sarif.rb template.erb]
+    libexec.install %w[tools.d html_report.rb template.erb]
     libexec.install 'csv2sarif.rb', 'csv2sarif'
   end
 
