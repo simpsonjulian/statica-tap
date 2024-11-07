@@ -6,9 +6,9 @@ class Statica < Formula
   license "MIT"
   depends_on "checkov"
   depends_on "jq"
-  depends_on "retire"
   depends_on "lizard-analyzer"
   depends_on "pmd"
+  depends_on "retire"
   depends_on "semgrep"
   depends_on "trivy"
 
