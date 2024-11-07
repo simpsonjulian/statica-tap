@@ -24,11 +24,11 @@ jobs:
           key: ${{ matrix.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
           restore-keys: ${{ matrix.os }}-rubygems-
 
-      - run: brew test-bot --only-cleanup-before statica
+      - run: brew test-bot --tap simpsonjulian/statica-tap  --only-cleanup-before statica
 
-      - run: brew test-bot --only-setup statica
+      - run: brew test-bot --tap simpsonjulian/statica-tap  --only-setup statica
 
-      - run: brew test-bot --only-tap-syntax statica
+      - run: brew test-bot --tap simpsonjulian/statica-tap  --only-tap-syntax statica
 
 
       - name: Upload bottles as artifact
