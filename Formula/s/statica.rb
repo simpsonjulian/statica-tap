@@ -1,8 +1,8 @@
 class Statica < Formula
   desc "Static Analysis meta tool"
   homepage "https://github.com/simpsonjulian/statica"
-  url "https://github.com/simpsonjulian/statica/archive/refs/tags/v1.2.2.tar.gz"
-  sha256 "994e4125d31ef8379e7be96cce76614978d7685eb905ec4dea87611aac97fabb"
+  url "https://github.com/simpsonjulian/statica/archive/refs/tags/v1.2.3.tar.gz"
+  sha256 "ad92d1ece16d2149121532329bc4e5b9075738592c318327a637205299f4fe5b"
   license "MIT"
   depends_on "checkov"
   depends_on "jq"
