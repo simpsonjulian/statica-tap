@@ -17,6 +17,11 @@ class Statica < Formula
     sha256 "3983cdfad1c82676cb7726b1e57ce26e01645fb3a4b797eb552d456f418e5ea4"
   end
 
+  resource "semgrep-rules-manager" do
+    url "https://files.pythonhosted.org/packages/88/ba/9b8270f99c27f7a22d70836a17cb64e42d0e4601eb3c2a72baa9f6aecfbd/semgrep_rules_manager-0.3.2.tar.gz"
+    sha256 "0221eda7c1a42904f428ce0c0339c7e80d47bd0ce5455ead5db854b31948b5ad"
+  end
+
   def install
     bin.install "statica"
     libexec.install %w[tools.d html_report.rb template.erb csv2sarif]
