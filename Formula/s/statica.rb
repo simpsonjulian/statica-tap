@@ -39,6 +39,7 @@ class Statica < Formula
 
     # Install Ruby gem dependencies
     system "bundle", "config", "set", "--local", "path", "vendor/bundle"
+    system "bundle", "config", "set", "--local", "without", "development"
     system "bundle", "install"
 
     # Install Ruby gem
