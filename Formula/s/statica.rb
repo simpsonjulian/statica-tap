@@ -45,8 +45,13 @@ class Statica < Formula
     system "gem", "build", "statica.gemspec"
     system "gem", "install", "-V", "--install-dir", libexec, "statica-#{version}.gem"
 
-    # Create wrapper script
-    (bin / "statica").write_env_script libexec / "bin/statica", GEM_PATH: "#{libexec}:#{ENV["GEM_PATH"]}"
+    # Create wrapper script. statica is a bash script, so point at it directly:
+    # libexec/bin/statica is RubyGems' generated stub, which loads it as Ruby
+    # and dies with a SyntaxError. Its Ruby helpers use `#!/usr/bin/env ruby`,
+    # so put the Homebrew Ruby (keg-only on macOS) first on PATH.
+    (bin / "statica").write_env_script libexec / "gems/statica-#{version}/statica",
+                                       GEM_PATH: "#{libexec}:#{ENV["GEM_PATH"]}",
+                                       PATH:     "#{formula_opt_bin("ruby")}:$PATH"
   end
 
   test do
