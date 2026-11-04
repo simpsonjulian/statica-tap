@@ -8,14 +8,17 @@ class Statica < Formula
   depends_on "bearer/tap/bearer"
   depends_on "checkov"
   depends_on "coreutils"
+  depends_on "ctags"
   depends_on "jq"
   depends_on "lizard-analyzer"
   depends_on "pmd"
   depends_on "python@3.12"
   depends_on "retire"
+  depends_on "ripgrep"
   depends_on "ruby"
   depends_on "semgrep"
   depends_on "trivy"
+  depends_on "unused-code/formulae/unused"
 
   resource "sarif-tools" do
     url "https://files.pythonhosted.org/packages/63/e8/04311fbba93a4953eea9c6f2bc09d3b0b815a0fba0cfa74ac6bb95118a0a/sarif_tools-3.0.3.tar.gz"
@@ -48,10 +51,11 @@ class Statica < Formula
     # Create wrapper script. statica is a bash script, so point at it directly:
     # libexec/bin/statica is RubyGems' generated stub, which loads it as Ruby
     # and dies with a SyntaxError. Its Ruby helpers use `#!/usr/bin/env ruby`,
-    # so put the Homebrew Ruby (keg-only on macOS) first on PATH.
+    # so put the Homebrew Ruby (keg-only on macOS) first on PATH. ctags goes first
+    # too: macOS's /usr/bin/ctags is BSD ctags, which unused_with_ctags rejects.
     (bin / "statica").write_env_script libexec / "gems/statica-#{version}/statica",
                                        GEM_PATH: "#{libexec}:#{ENV["GEM_PATH"]}",
-                                       PATH:     "#{formula_opt_bin("ruby")}:$PATH"
+                                       PATH:     "#{formula_opt_bin("ruby")}:#{formula_opt_bin("ctags")}:$PATH"
   end
 
   test do
