@@ -5,6 +5,8 @@ class Statica < Formula
   sha256 "ead89c91c758215ced28b1030f5096acac575c4efb4da235b2de6e4ba85c3a93"
   license "MIT"
 
+  depends_on "cmake" => :build
+  depends_on "rust" => :build
   depends_on "bearer/tap/bearer"
   depends_on "checkov"
   depends_on "coreutils"
@@ -29,14 +31,26 @@ class Statica < Formula
     sha256 "0221eda7c1a42904f428ce0c0339c7e80d47bd0ce5455ead5db854b31948b5ad"
   end
 
+  # Built here rather than depended on as unused-code/formulae/unused: Homebrew
+  # won't auto-tap a dependency's third-party tap, so that broke installing statica.
+  resource "unused" do
+    url "https://github.com/unused-code/unused/archive/refs/tags/0.4.0.tar.gz"
+    sha256 "40049863d0f62c8aed394c8fd125ad9082c328858bdeed1cdbbff0ce621a3023"
+  end
+
   def install
     ENV["GEM_HOME"] = libexec
 
     # Install Python resources
-    resources.each do |r|
+    resources.reject { |r| r.name == "unused" }.each do |r|
       r.stage do
         system "pip3", "install", "--prefix=#{libexec}", "."
       end
+    end
+
+    # Build unused into its own prefix: libexec/bin holds RubyGems stubs
+    resource("unused").stage do
+      system "cargo", "install", *std_cargo_args(root: libexec/"unused")
     end
 
     # Install Ruby gem dependencies
@@ -52,9 +66,10 @@ class Statica < Formula
     # and dies with a SyntaxError. Its Ruby helpers use `#!/usr/bin/env ruby`,
     # so put the Homebrew Ruby (keg-only on macOS) first on PATH. ctags goes first
     # too: macOS's /usr/bin/ctags is BSD ctags, which unused_with_ctags rejects.
+    path = [formula_opt_bin("ruby"), formula_opt_bin("ctags"), libexec/"unused/bin", "$PATH"].join(":")
     (bin / "statica").write_env_script libexec / "gems/statica-#{version}/statica",
                                        GEM_PATH: "#{libexec}:#{ENV["GEM_PATH"]}",
-                                       PATH:     "#{formula_opt_bin("ruby")}:#{formula_opt_bin("ctags")}:$PATH"
+                                       PATH:     path
   end
 
   test do
