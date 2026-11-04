@@ -18,7 +18,6 @@ class Statica < Formula
   depends_on "ruby"
   depends_on "semgrep"
   depends_on "trivy"
-  depends_on "unused-code/formulae/unused"
 
   resource "sarif-tools" do
     url "https://files.pythonhosted.org/packages/63/e8/04311fbba93a4953eea9c6f2bc09d3b0b815a0fba0cfa74ac6bb95118a0a/sarif_tools-3.0.3.tar.gz"
