@@ -1,19 +1,22 @@
 class Statica < Formula
   desc "Static Analysis meta tool"
   homepage "https://github.com/simpsonjulian/statica"
-  url "https://github.com/simpsonjulian/statica/archive/refs/tags/v1.2.6.tar.gz"
-  sha256 "00b5fa44e64fa9b5e3040dc306f880efc145f231bc3ecd6819e75280869064ca"
+  url "https://github.com/simpsonjulian/statica/archive/refs/tags/v1.2.9.tar.gz"
+  sha256 "ead89c91c758215ced28b1030f5096acac575c4efb4da235b2de6e4ba85c3a93"
   license "MIT"
 
   depends_on "bearer/tap/bearer"
   depends_on "checkov"
   depends_on "coreutils"
+  depends_on "ctags"
   depends_on "jq"
   depends_on "lizard-analyzer"
   depends_on "pmd"
   depends_on "python@3.12"
   depends_on "retire"
+  depends_on "ripgrep"
   depends_on "ruby"
+  depends_on "scc"
   depends_on "semgrep"
   depends_on "trivy"
 
@@ -46,8 +49,14 @@ class Statica < Formula
     system "gem", "build", "statica.gemspec"
     system "gem", "install", "-V", "--install-dir", libexec, "statica-#{version}.gem"
 
-    # Create wrapper script
-    (bin / "statica").write_env_script libexec / "bin/statica", GEM_PATH: "#{libexec}:#{ENV["GEM_PATH"]}"
+    # Create wrapper script. statica is a bash script, so point at it directly:
+    # libexec/bin/statica is RubyGems' generated stub, which loads it as Ruby
+    # and dies with a SyntaxError. Its Ruby helpers use `#!/usr/bin/env ruby`,
+    # so put the Homebrew Ruby (keg-only on macOS) first on PATH. ctags goes first
+    # too: macOS's /usr/bin/ctags is BSD ctags, which unused_with_ctags rejects.
+    (bin / "statica").write_env_script libexec / "gems/statica-#{version}/statica",
+                                       GEM_PATH: "#{libexec}:#{ENV["GEM_PATH"]}",
+                                       PATH:     "#{formula_opt_bin("ruby")}:#{formula_opt_bin("ctags")}:$PATH"
   end
 
   test do
