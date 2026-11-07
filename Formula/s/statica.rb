@@ -16,6 +16,7 @@ class Statica < Formula
   depends_on "retire"
   depends_on "ripgrep"
   depends_on "ruby"
+  depends_on "scc"
   depends_on "semgrep"
   depends_on "trivy"
 
